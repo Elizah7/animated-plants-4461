@@ -4,44 +4,27 @@ import logoicon from "../pictures/logoicon.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Stack } from "@chakra-ui/layout";
 import { Radio } from "@chakra-ui/radio";
-import { Button, useToast } from "@chakra-ui/react";
+import {Box, Button, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import usergetdataaction from "../Redux/Auth/UserSignup/usergetdataaction";
 import axios from "axios";
+import Footer from "../VPages/Footer"
+import { getCartData } from "../Redux/Cartrr/cartaction";
 
 const FinalPayment = () => {
   const toast = useToast();
   const navigate = useNavigate();
-
-  const userId = JSON.parse(localStorage.getItem("userId")) || "";
-  // console.log(userId)
-  const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
-  const totalmrp = cartData?.reduce((ac, i) => ac + i.off_price, 0);
-  const totaloff = cartData?.reduce((ac, i) => ac + Number(i.price), 0);
+  const [selectedPaymentMode, setSelectedPaymentMode] = useState("Cash on delivery");
+  const cartData = useSelector(store => store.getcartreducer.data)
+  const totalmrp = cartData && cartData.Data && cartData.Data.reduce((ac, i) => ac + Number(i.off_price)*Number(i.count), 0);
+  const totaloff = cartData && cartData.Data && cartData.Data.reduce((ac, i) => ac + Number(i.price)*Number(i.count), 0);
   console.log(totaloff);
-
   const dispatch = useDispatch();
-  const userData = useSelector((store) => store.usergetdatareducer.userdata);
-  console.log("user", userData);
-
   useEffect(() => {
-    dispatch(usergetdataaction());
-    const loginUserData = userData?.filter((ele) => ele.id == userId);
-    console.log("loginUserData", loginUserData);
+    dispatch(getCartData())
   }, []);
 
-  // const getUserData = () => {
-  //   axios
-  //     .get(" https://awful-fly-shoulder-pads.cyclic.app/admin_signup")
-  //     .then((res) => {
-  //       setCurrUser(res.data[0].admin_name);
-  //     });
-  // };
-  // // https://awful-fly-shoulder-pads.cyclic.app/admin_signup
 
-  // useEffect(() => {
-  //   getUserData();
-  // }, []);
 
   const handleclickhome = () => {
     localStorage.setItem("cartData", JSON.stringify([]));
@@ -53,6 +36,42 @@ const FinalPayment = () => {
       isClosable: true,
     });
     navigate("/");
+  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Step 3: Create the modal component with form elements
+  const CreditDebitCardModal = () => {
+
+    return (
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Enter Card Details</ModalHeader>
+          <ModalCloseButton />
+          <form onSubmit={handleclickhome}>
+          <ModalBody>
+            <Stack spacing={3}>
+              <Input placeholder="Card Number" required/>
+              <Input placeholder="Expiry Date" required />
+              <Input placeholder="PIN Number"  required/>
+              <Input placeholder="Address"  required/>
+            </Stack>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Input type="submit" backgroundColor="green" color="white"/>
+          </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
+    );
+  };
+
+  // Step 4: Handle the behavior when the user selects "Credit/Debit Card" and open the modal
+  const handleCreditDebitCardSelected = () => {
+    onOpen(); // This will open the modal when the user selects "Credit/Debit Card"
   };
 
   return (
@@ -85,26 +104,14 @@ const FinalPayment = () => {
               </div>
               <div>
                 <Stack>
-                  <Radio size="sm" name="1" colorScheme="gray" defaultChecked>
-                    Cash on delivery
-                  </Radio>
-                  <Radio size="sm" name="1" colorScheme="gray">
-                    PhonePay/Googlepay/BhimUpi
-                  </Radio>
-
-                  <Radio size="sm" name="1" colorScheme="gray">
-                    Credit/Debit Card
-                  </Radio>
-
-                  <Radio size="sm" name="1" colorScheme="gray">
-                    Paytm/Wallets
-                  </Radio>
-                  <Radio size="sm" name="1" colorScheme="gray">
-                    Net Banking
-                  </Radio>
-                  <Radio size="sm" name="1" colorScheme="gray">
-                    EMI/ PayLater
-                  </Radio>
+                <div>
+                <div>Cash on delivery</div>
+                <div>PhonePay/Googlepay/BhimUpi</div>
+                <div onClick={handleCreditDebitCardSelected}>Credit/Debit Card</div>
+                <div>Paytm/Wallets</div>
+                <div>Net Banking</div>
+                <div>EMI/ PayLater</div>
+              </div>
                 </Stack>
               </div>
             </div>
@@ -132,31 +139,21 @@ const FinalPayment = () => {
                     <td>Discount on MRP</td>
                     <td>₹{totalmrp - totaloff}</td>
                   </tr>
-
                   <hr />
                   <tr>
                     <td>Total Amount</td>
                     <td>₹{totaloff}</td>
                   </tr>
                 </table>
-                <div className={styles.btndiv}>
-                  <div className={styles.subpaybtn}>
-                    <div className={styles.subpaybtn}>
-                      <Button
-                        onClick={() => {
-                          handleclickhome();
-                        }}
-                      >
-                        Continue
-                      </Button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <CreditDebitCardModal/>
+      <Box>
+        <Footer/>
+      </Box>
     </>
   );
 };

@@ -2,13 +2,14 @@ import React from 'react'
 import Filters from '../Components/CompnentsT/Filters'
 import ProductList from '../Components/CompnentsT/ProductList'
 import Sidebar from '../Components/CompnentsT/Sidebar'
-import Navbar from '../Components/Navbar'
+
 import ProductDetail from './ProductDetail'
+import Navbar from '../Components/NewNavbar'
 
 const Product = () => {
   return (
     <div>
-      <Navbar />
+     <Navbar/>
       <Filters />
       
         {/* <ProductList /> */}

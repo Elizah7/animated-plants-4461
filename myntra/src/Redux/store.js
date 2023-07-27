@@ -17,7 +17,10 @@ import { addwomenamountreducer } from "./Auth/Admin/AdminProduct/AddWomen/womena
 import { reducewomenamountreducer } from "./Auth/Admin/AdminProduct/AddWomen/womenamountreducer";
 import { addmenamountreducer } from "./Auth/Admin/AdminProduct/AddMenData/menamounreducer";
 import { reducemenamountreducer } from "./Auth/Admin/AdminProduct/AddMenData/menamounreducer";
-const root = combineReducers({getbannreducer,usergetdatareducer,Loginreducer,adminloginreducer,productDatareducer,womenreducer,menreducer,addwomenprodreducer,addmenprodreducer,deletemenreducer,deletewomenreducer,addwomenamountreducer,reducewomenamountreducer,addmenamountreducer,reducemenamountreducer})
+import { singleprodreducer } from "./Products/reducer";
+import { getcartreducer } from "./Cartrr/cartreducer";
+import { cartreducer } from "./Cartrr/cartreducer";
+const root = combineReducers({cartreducer,reducer,singleprodreducer,getbannreducer,usergetdatareducer,Loginreducer,adminloginreducer,productDatareducer,womenreducer,menreducer,addwomenprodreducer,addmenprodreducer,deletemenreducer,deletewomenreducer,addwomenamountreducer,reducewomenamountreducer,addmenamountreducer,reducemenamountreducer,getcartreducer})
 export const store=legacy_createStore(root,applyMiddleware(thunk));
 
 

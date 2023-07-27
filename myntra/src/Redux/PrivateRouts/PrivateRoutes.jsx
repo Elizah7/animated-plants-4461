@@ -1,18 +1,26 @@
 import { useToast } from '@chakra-ui/react'
+import { useEffect } from 'react'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Navigate } from 'react-router-dom'
 
 const PrivateRoutes = ({children}) => {
          const navigate = useNavigate() 
          const toast = useToast()
-         const token = JSON.parse(localStorage.getItem("token"))
+         const token = JSON.parse(localStorage.getItem("fashionmantra")) || null
 
          if(token){
               return children
          }
-         else{
-             navigate("/login")
-         }
+
+            toast({
+                position: "center",
+                title: 'First Log in',
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+            });
+    // return navigate("/login")
+   
 }
 
 export default PrivateRoutes

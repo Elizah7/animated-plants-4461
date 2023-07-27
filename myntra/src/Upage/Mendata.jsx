@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import addmenproductaction from "../Redux/Auth/Admin/AdminProduct/AddMenData/addmendataaction"
 
 import ProductDetails from './ProdDetails'
-import AddProd from './AddProd'
 import { getmenData } from '../Redux/Auth/Admin/AdminProduct/MenProduct/getmendataaction'
 
 import deletemenaction from '../Redux/Auth/Admin/AdminProduct/AddMenData/deletemenaction'
 import { addmenamount, reducemenamount } from '../Redux/Auth/Admin/AdminProduct/AddMenData/menamount'
+import ProductForm from './AddProd'
 
 
 const Mendata = () => {
@@ -43,7 +43,7 @@ const Mendata = () => {
                     <ModalHeader>Enter the Details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <AddProd addprodaction={addmenproductaction}/>
+                        <ProductForm addprodaction={addmenproductaction}/>
                     </ModalBody>
                 </ModalContent>
             </Modal>

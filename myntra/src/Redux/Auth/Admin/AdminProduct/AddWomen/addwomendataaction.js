@@ -4,7 +4,7 @@ import { ADDWOMENPRODFAILURE, ADDWOMENPRODREQUST, ADDWOMENPRODSUCCESS } from './
 
 const addwomenaction = (params)=>(dispatch) => {
       dispatch({type:ADDWOMENPRODREQUST})
-      axios.post("https://cheerful-trunks-duck.cyclic.app/women",params)
+      axios.post("http://localhost:8000/products/",params)
       .then(res=>dispatch({type:ADDWOMENPRODSUCCESS,payload:res.data}))
       .catch(err=>dispatch({type:ADDWOMENPRODFAILURE}))
 }

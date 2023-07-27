@@ -7,7 +7,7 @@ const initlogin ={
     token:null
 }
 export const Loginreducer = (state = initlogin,action)=>{
-     
+     console.log(action)
     switch(action.type){
          case types.GETLOGINDATAREQUEST:{
             return{
@@ -21,7 +21,7 @@ export const Loginreducer = (state = initlogin,action)=>{
                 ...state,
                 isError:false,
                 isloading:false,
-                token:action.payload
+                token:action.payload.token
                 
             }
          }

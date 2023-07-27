@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 
 
 import ProductDetails from './ProdDetails'
-import AddProd from './AddProd'
 import addwomenaction from '../Redux/Auth/Admin/AdminProduct/AddWomen/addwomendataaction'
 import { getwomenData } from '../Redux/Auth/Admin/AdminProduct/WomenProd/getwomendataaction'
 import deletewomenaction from '../Redux/Auth/Admin/AdminProduct/AddWomen/deletewomenactio'
 import { reducewomenamount } from '../Redux/Auth/Admin/AdminProduct/AddWomen/womenamount'
 import { addwomenamount } from '../Redux/Auth/Admin/AdminProduct/AddWomen/womenamount'
+import ProductForm from './AddProd'
 const Womendata = () => {
 
     const data2 = useSelector((store => store.womenreducer.prod))
@@ -41,7 +41,7 @@ const Womendata = () => {
                     <ModalHeader>Enter the Details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                     <AddProd addprodaction={addwomenaction}/>
+                     <ProductForm addprodaction={addwomenaction}/>
                     </ModalBody>
                 </ModalContent>
             </Modal>

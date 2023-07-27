@@ -10,63 +10,43 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import usergetdataaction from "../Redux/Auth/UserSignup/usergetdataaction";
 import EmptyCart from "../PagesA/EmptyCart";
+import { UpdateCartProductAction, deleteCartProductAction, getCartData } from "../Redux/Cartrr/cartaction";
+import { Box } from "@chakra-ui/react";
+import Footer from "../VPages/Footer"
 // import pic from "./pictures/fashion_mantra.png";
 
 export const CartPayment = () => {
   const [cartArr, setCartArr] = useState([]);
   const [currUser, setCurrUser] = useState("");
-  // const [totalmrp, setTotalmrp] = useState(0);
 
-  const userId = JSON.parse(localStorage.getItem("userId")) || "";
-  // console.log(userId)
-  const cartData = JSON.parse(localStorage.getItem("cartData")) || [];
-  const totalmrp = cartData?.reduce((ac, i) => ac + Number(i.off_price),0);
-  const totaloff = cartData?.reduce((ac, i) => ac + Number(i.price), 0);
+  const cartData = useSelector(store => store.getcartreducer.data)
+
+  const totalmrp = cartData && cartData.Data && cartData.Data.reduce((ac, i) => ac + Number(i.off_price)*Number(i.count), 0);
+  const totaloff = cartData && cartData.Data && cartData.Data.reduce((ac, i) => ac + Number(i.price)*Number(i.count), 0);
   console.log(totaloff);
 
   const dispatch = useDispatch();
-  const userData = useSelector((store) => store.usergetdatareducer.userdata);
-  console.log("user", userData);
 
-  useEffect(() => {
-    dispatch(usergetdataaction());
-    const loginUserData = userData?.filter((ele) => ele.id == userId);
-    console.log("loginUserData", loginUserData);
-  }, []);
-
-  // const discountedprice = totalmrp - offp;
-  // setTotalmrp(ans);
-  // function ManualClose() {
-  //   const { isOpen, onOpen, onClose } = useDisclosure()
   const navigate = useNavigate();
-  const arr = [1, 2, 3];
-
-  // useEffect(() => {
-  //   getCartData();
-  // }, []);
-
-  const getUserData = () => {
-    axios
-      .get(" https://awful-fly-shoulder-pads.cyclic.app/admin_signup")
-      .then((res) => {
-        // console.log(
-        //   "res_user.data.data",
-        //   typeof res.data,
-        //   res.data[0].admin_name
-        // );
-        // console.log("res.data", typeof res.data, res.data);
-        setCurrUser(res.data[0].admin_name);
-        // setCartArr([...res.data]);
-        // console.log("cartArr", typeof cartArr, cartArr);
-      });
-  };
-  // https://awful-fly-shoulder-pads.cyclic.app/admin_signup
 
   useEffect(() => {
-    getUserData();
+    dispatch(getCartData())
   }, []);
 
-  if (cartData == 0) {
+  const HandleQty = (id, val)=>{
+
+    dispatch(UpdateCartProductAction(val, id))
+    .then((res)=>dispatch(getCartData()))
+}
+
+const HandleDelete = (id)=>{
+    dispatch(deleteCartProductAction(id))
+    .then((res)=>dispatch(getCartData()))
+
+}
+
+
+  if (cartData && cartData.Data && cartData.Data.length == 0) {
     return (
       <>
         <EmptyCart />
@@ -148,61 +128,66 @@ export const CartPayment = () => {
               </div>
 
               <div className={styles.proditemcardlist}>
-                {cartData.length
-                  ? cartData.map((item) => {
-                      return (
-                        <div
-                          key={Math.random()}
-                          className={styles.proditemcardcard}
-                        >
-                          <img
-                            // src="https://assets.myntassets.com/f_webp,dpr_1.0,q_60,w_210,c_limit,fl_progressive/assets/images/8988247/2020/10/22/c89c54cc-de70-4815-9108-fa1f5d01ad171603366379751-HRX-by-Hrithik-Roshan-Men-Grey-Out-Back-Outdoor-Shoes-195160-1.jpg"
-                            alt=""
-                            src={item.images?.image1}
-                          />
-                          <div className={styles.actualcard}>
-                            <div className={styles.brandname}>{item.brand}</div>
-                            <div className={styles.productname}>
-                              {item.title}
-                            </div>
-                            <div className={styles.soldby}>
-                              sold by: arttees
-                            </div>
-                            <div className={styles.itemaincontainer}>
+                {cartData && cartData.Data && cartData.Data.length
+                  ? cartData.Data.map((item) => {
+                    return (
+                      <div
+                        key={Math.random()}
+                        className={styles.proditemcardcard}
+                      >
+                        <img
+                          // src="https://assets.myntassets.com/f_webp,dpr_1.0,q_60,w_210,c_limit,fl_progressive/assets/images/8988247/2020/10/22/c89c54cc-de70-4815-9108-fa1f5d01ad171603366379751-HRX-by-Hrithik-Roshan-Men-Grey-Out-Back-Outdoor-Shoes-195160-1.jpg"
+                          alt=""
+                          src={item.images?.image1}
+                        />
+                        <div className={styles.actualcard}>
+                          <div className={styles.brandname}>{item.brand}</div>
+                          <div className={styles.productname}>
+                            {item.title}
+                          </div>
+                          <div className={styles.soldby}>
+                            sold by: arttees
+                          </div>
+                          <div className={styles.itemaincontainer}>
+                            <div>
                               <div>
-                                <div>
-                                  <div>Size: {item.sizes && item.sizes[1]}</div>
-                                </div>
+                                <div>Size: {item.sizes && item.sizes[1]}</div>
                               </div>
+                            </div>
+                            <Box display="flex" width="100%">
+                              <Box display="flex" justifyContent="space-between" width="40%">
+                                <button disabled={item.count == 1} onClick={() => HandleQty(item._id, item.count - 1)}>-</button>
+                                <button>{item.count}</button>
+                                <button onClick={() => HandleQty(item._id, item.count + 1)}>+</button>
+                              </Box>
                               <div>
-                                <div>
-                                  <div>Qty: 1</div>
-                                </div>
+                                <button style={{ border: "none" }} onClick={() => HandleDelete(item._id)}><img src="https://images.dailyobjects.com/marche/icons/bin.png?tr=cm-pad_resize,v-2,w-20,dpr-1" alt="delete" /></button>
                               </div>
-                            </div>
-                            <div style={{ display: "flex", gap: "10px" }}>
-                              <div className={styles.brandname}>
-                                {" "}
-                                <b> ₹{item.price}</b>
-                              </div>
-                              <div className={styles.brandname}>
-                                <s>₹{item.off_price}</s>
-                              </div>
-                              <div className={styles.brandname}>
-                                {item.discount}% off
-                              </div>
-                            </div>
-
+                            </Box>
+                          </div>
+                          <div style={{ display: "flex", gap: "10px" }}>
                             <div className={styles.brandname}>
-                              30 days return available
+                              {" "}
+                              <b> ₹{item.price}</b>
                             </div>
-                            <div className={styles.expressdelivery}>
-                              Express delivery in 2 days
+                            <div className={styles.brandname}>
+                              <s>₹{item.off_price}</s>
+                            </div>
+                            <div className={styles.brandname}>
+                              {item.discount}% off
                             </div>
                           </div>
+
+                          <div className={styles.brandname}>
+                            30 days return available
+                          </div>
+                          <div className={styles.expressdelivery}>
+                            Express delivery in 2 days
+                          </div>
                         </div>
-                      );
-                    })
+                      </div>
+                    );
+                  })
                   : "Cart is Empty"}
               </div>
             </div>
@@ -270,7 +255,7 @@ export const CartPayment = () => {
                     </tbody>
                   </table>
                   <div className={styles.btndiv}>
-                    <Link to="/checkout/address">
+                    <Link to="/checkout/address/payment">
                       {" "}
                       <div className={styles.subpaybtn}>
                         <button> PLACE ORDER</button>
@@ -284,6 +269,9 @@ export const CartPayment = () => {
           </div>
         </div>
       </div>
+      <Box>
+        <Footer/>
+      </Box>
     </>
   );
 };

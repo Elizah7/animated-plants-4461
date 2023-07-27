@@ -1,100 +1,96 @@
-import { FormControl, FormErrorMessage, Checkbox, Input, Select, Button, Spinner, useToast } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { FormControl, Input, Button, Spinner, useToast, Box } from '@chakra-ui/react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
-import usergetdataaction from '../Redux/Auth/UserSignup/usergetdataaction'
+import { useNavigate } from 'react-router-dom'
 import "./Signup.css"
 import usersignupaction from '../Redux/Auth/UserSignup/usersignupaction'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const SignupPage = () => {
   const init = {
     email: "",
     password: "",
     name: "",
-    phonenumber: "",
-    token: null,
-    cart:[],
-    wish:[]
+    phone_number: "",
   }
   const [data, setData] = useState(init)
   const toast = useToast()
   const dispatch = useDispatch()
-  const userdata = useSelector(store => store.usergetdatareducer.userdata)
-  const isloading = useSelector(store=>store.usergetdatareducer.isloading)
- const navigate =useNavigate()
-
-  useEffect(() => {
-    dispatch(usergetdataaction())
-  }, [])
+  const navigate = useNavigate()
+  const [isloading, setIsloading] = useState(false)
 
   const handleChange = (e) => {
     const { name } = e.target
-    let  val = e.target.value
+    let val = e.target.value
     setData({ ...data, [name]: val })
   }
-  const onSubmit = (e,data) => {
+
+  const onSubmit = (e, data) => {
     e.preventDefault()
-    let payload = { ...data, token: data.name }
-
-    let getuseremai = userdata.filter(ele => ele.email === payload.email)
-    if (getuseremai.length > 0) {
-      toast({
-        position:"center",
-        title: 'This account already exist',
-        // description: "Create a new ",
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
+    setIsloading(true)
+    dispatch(usersignupaction(data))
+      .then((res) => {
+        console.log(res)
+        if (res.payload.user) {
+          toast({
+            position: "top",
+            title: 'Account created successfully',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+          navigate("/login")
+        } else {
+          toast({
+            position: "top",
+            title: res.payload.msg,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+        }
       })
       setData(init)
-    }
-    else {
-      dispatch(usersignupaction(payload))
-      toast({
-        position:"top",
-        title: 'Account created succesfully',
-        // description: "We've created your account for you.",
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-      })
-      setData(init)
-      navigate("/login")
-    }
+      setIsloading(false)
+   
 
- 
   }
 
-  if(isloading){
-    return <form className='form'>
-        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl'/>
-    
-    </form>
+  if (isloading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <form className='form2'>
+          <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+        </form>
+      </Box>
+    )
   }
 
-  return (<>
-    <form className='form' onSubmit={(e) => onSubmit(e,data)}>
-      <h1>Create account here</h1>
-      <FormControl className='form-controll'>
+  return (
+    <Box className='container'>
+      <form className='form' onSubmit={(e) => onSubmit(e, data)}>
+        <h1>Create account here</h1>
+        <FormControl className='form-controll'>
 
-        <Input name='name' value={data.name} onChange={handleChange} className='input' type='text' placeholder="Enter your name" />
+          <Input name='name' value={data.name} onChange={handleChange} className='input' type='text' placeholder="Enter your name" />
 
-        <Input name="email" value={data.email} onChange={handleChange} className='input' type='email' placeholder="enter your email" />
+          <Input name="email" value={data.email} onChange={handleChange} className='input' type='email' placeholder="Enter your email" />
 
-        <Input name="phonenumber" value={data.phonenumber} onChange={handleChange} className='input' type='number' placeholder="Enter your phone number" />
+          <Input name="phone_number" value={data.phone_number} onChange={handleChange} className='input' type='number' placeholder="Enter your phone number" />
 
-        <Input name="password" value={data.password} onChange={handleChange} className='input' type='password' placeholder="Enter your password" />
+          <Input name="password" value={data.password} onChange={handleChange} className='input' type='password' placeholder="Enter your password" />
 
-      </FormControl>
-      <Button colorScheme='teal'type='submit'>
-        Submit
-      </Button>
-      <p>Already a user <Link to="/login">Login here</Link></p>
-      <Link to="/adminlogin">Admin Login</Link>
-    </form>
-
-  </>
+        </FormControl>
+        <Button colorScheme='teal' type='submit' marginTop="4%">
+          Submit
+        </Button>
+        <p>Already a user <Link to="/login" color="blue">Login here</Link></p>
+        <Link to="/adminlogin" color="blue">Admin Login</Link>
+      </form>
+    </Box>
   )
-
 }
+
 export { SignupPage }
+
+// Add CSS styles

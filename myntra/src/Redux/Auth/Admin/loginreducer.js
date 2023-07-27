@@ -6,7 +6,7 @@ const initstate = {
     isLoading :false,
     admindata :[],
 }
-const loginreducer = (state=initstate,{type,payload}) => {
+const adminloginreducer = (state=initstate,{type,payload}) => {
      switch (type){
          case types.GETADMINDATAREQUEST:{
             return{
@@ -39,4 +39,4 @@ const loginreducer = (state=initstate,{type,payload}) => {
   
 }
 
-export default loginreducer
+export default adminloginreducer

@@ -54,13 +54,7 @@ const CartAddress = () => {
     getUserData();
   }, []);
 
-  if(cartData==0){
-    return (
-      <>
-        <h1>Cart Empty</h1>
-      </>
-    )
-    }
+
   return (
     <>
       <div className={styles.maindiv}>

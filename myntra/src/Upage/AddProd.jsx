@@ -1,84 +1,79 @@
-import { Stack, Heading, Input, FormControl, FormLabel, Select, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure } from '@chakra-ui/react'
-import React from 'react'
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState } from 'react';
+import { Box, Flex, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
 
+const ProductForm = () => {
+  const [product, setProduct] = useState({
+    title: '',
+    images: {
+      image1: '',
+      image2: '',
+      image3: '',
+      image4: '',
+    },
+    rating: 0,
+    count: 0,
+    description: '',
+    discount: '',
+    off_price: 0,
+    brand: '',
+    color: '',
+    sizes: [],
+    gender: '',
+    price: '',
+    size: '',
+    categories: '',
+    qty: '',
+  });
 
-
-
-const AddProd = ({ addprodaction }) => {
-  const init = {
-    title: "",
-    brand: "",
-    price: "",
-    count: "",
-    category: "",
-    images: {},
-
-  }
-  const [prod, setProd] = useState(init)
-
-  const dispatch = useDispatch()
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setProd({ ...prod, [name]: value })
-  }
-  const init2 ={
-    image1:"",
-    image2:"",
-    image3:"",
-    image4:"",
-    image5:"",
- 
-}
+    const { name, value } = e.target;
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      [name]: value,
+    }));
+  };
 
-const [img,setImg] = useState(init2)
-const handlChange =(e)=>{
-     const {name,value} = e.target
-     setImg({...img,[name]:value})
-}
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Send product data to the backend
+    console.log(product);
+    // You can make an API request to send the product data to your backend endpoint here
+  };
 
+  return (
+    <Box p={4}>
+      <form onSubmit={handleSubmit}>
+        <Flex direction="column">
+          <FormControl mb={4}>
+            <FormLabel>Title</FormLabel>
+            <Input type="text" name="title" value={product.title} onChange={handleChange} />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>Image 1</FormLabel>
+            <Input type="text" name="images.image1" value={product.images.image1} onChange={handleChange} />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>Image 2</FormLabel>
+            <Input type="text" name="images.image2" value={product.images.image2} onChange={handleChange} />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>Image 3</FormLabel>
+            <Input type="text" name="images.image3" value={product.images.image3} onChange={handleChange} />
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>Image 4</FormLabel>
+            <Input type="text" name="images.image4" value={product.images.image4} onChange={handleChange} />
+          </FormControl>
+          {/* Rest of the form fields */}
+          {/* Add more FormControl components for the remaining product properties */}
+          {/* Example: Rating, Description, Discount, etc. */}
+          <Button type="submit" colorScheme="blue" mt={4}>
+            Create Product
+          </Button>
+        </Flex>
+      </form>
+    </Box>
+  );
+};
 
-  const handleSubmit = (e, prod) => {
-    e.preventDefault()
-    setProd({ ...prod, images: img })
-    // dispatch(addprodaction(prod))
-    console.log(prod)
-    setProd(init)
-    setImg(init)
-
-  }
-  return (<Stack>
-    <form onSubmit={(e) => handleSubmit(e, prod)}>
-      <FormControl>
-        <FormLabel>Enter Product Name</FormLabel>
-        <Input name="title" type="text" onChange={(e) => handleChange(e)} value={prod.title} />
-        <FormLabel>Enter Product Price</FormLabel>
-        <Input type="number" name="price" onChange={(e) => handleChange(e)} value={prod.price} />
-        <FormLabel>Enter Product Brand</FormLabel>
-        <Input type="text" name="brand" onChange={(e) => handleChange(e)} value={prod.brand} />
-        <FormLabel>Enter Product Quantity</FormLabel>
-        <Input type="number" name="count" onChange={(e) => handleChange(e)} value={prod.count} />
-        <FormLabel>Select Product Category</FormLabel>
-        <Select placeholder='Select option' name="category" onChange={(e) => handleChange(e)}>
-          <option value='tshirt'>T-Shirt</option>
-          <option value='shirt'>Shirt</option>
-          <option value='kurta'>Kurta</option>
-          <option value='shoes'>Shoes</option>
-        </Select>
-        <FormLabel>Enter Image1</FormLabel>
-      <Input onChange={(e)=>handlChange(e)} name="image1" type="text" value={img.image1} />
-      <FormLabel>Enter Image2</FormLabel>
-      <Input onChange={(e)=>handlChange(e)} name="image2" type="text" value={img.image2} />
-      <FormLabel>Enter Image3</FormLabel>
-      <Input onChange={(e)=>handlChange(e)} name="image3" type="text" value={img.image3}/>
-      <FormLabel>Enter Image4</FormLabel>
-      <Input onChange={(e)=>handlChange(e)} name="image4" type="text" value={img.image4} />
-      </FormControl>
-      <Button type="submit">Submit</Button>
-    </form>
-  </Stack >
-  )
-}
-
-export default AddProd
+export default ProductForm;

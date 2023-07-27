@@ -9,19 +9,18 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import Filters from './Filters';
 import Navbar from '../NewNavbar';
 import axios from 'axios';
-
 import { Box } from '@chakra-ui/react';
 import Footer from '../../VPages/Footer';
-const ProductList = () => {
+
+const WomenProductList = () => {
 
     const dispatch = useDispatch();
     const products = useSelector((store) => store.reducer.products);
-
-   console.log(products && products.Data)
+    let womendata = products && products.Data && products.Data.filter(ele=>ele.gender=="women")
+    console.log(products && products.Data)
     const isLoading = useSelector((store) => store.productDatareducer.isLoading)
     const location = useLocation();
     const [searchParams] = useSearchParams()
-    let mendata = products && products.Data && products.Data.filter(ele=>ele.gender=="men")
     useEffect(() => {
         let paramObj = {
             params: {
@@ -30,7 +29,6 @@ const ProductList = () => {
         }
         dispatch(getProduct(paramObj))
     },[location.search])
-
     if(isLoading) {
         return (
                 <>
@@ -47,14 +45,14 @@ const ProductList = () => {
     <Sidebar />
     <div className={styles.productList}>
         {
-          mendata && mendata.length>0 && mendata.map(ele=> <ProductCard {...ele}/>)
+          womendata && womendata.length>0 && womendata.map(ele=> <ProductCard {...ele}/>)
         }
     </div>
     <Box>
-        <Footer/>
+          <Footer/>
     </Box>
     </>
   )
 }
 
-export default ProductList
+export default WomenProductList

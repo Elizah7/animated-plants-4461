@@ -3,95 +3,51 @@ import axios from 'axios'
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Navbar2 from '../Components/Navbar2';
-import usergetdataaction from '../Redux/Auth/UserSignup/usergetdataaction';
-import cartaction from '../Redux/Cartrr/cartaction';
+import Navbar from '../Components/NewNavbar';
 import styles from './ProductDetail.module.css'
+
+import { useNavigate } from 'react-router-dom';
+import { addCart } from '../Redux/Cartrr/cartaction';
+
 const ProductDetail = ({ pro }) => {
-
-
-    const [clicked,setClicked] = useState(false);
-
-console.log(pro)
-
-  
-    console.log(pro)
-
-
+ console.log(pro)
     const dispatch = useDispatch()
-
-    useEffect(() => {
-        // axios.get("https://cheerful-trunks-duck.cyclic.app/cart")
-        // .then((res) => {
-        //     setCount(res.data.length)
-        //     //  
-        // })
-        // .catch((err) => {
-        //     console.log(err)
-        // })
-
-        console.log(clicked)
-
-        // dispatch(usergetdataaction());
-       
-        
-    },[clicked])
-
-
-
-      
-
-
- 
-
-    const userData = useSelector(store => store.usergetdatareducer.userdata)
-
-    console.log(userData);
-
-
-    const userId = JSON.parse(localStorage.getItem("userId")) || "";
-
-
-    const cartData = JSON.parse(localStorage.getItem("cartData")) || []
     const toast = useToast()
-
-    console.log("cartData", cartData)
+    const fashiontoken = JSON.parse(localStorage.getItem("fashionmantra"))|| null
+    const navigate = useNavigate()
     const handleCart = (e) => {
         e.preventDefault();
-        cartData.push(pro)
-
-        localStorage.setItem("cartData", JSON.stringify(cartData))
-        toast({
-            title: 'Product Added to Cart successfully',
-            description: "",
-            status: 'success',
-            duration: 4000,
-            isClosable: true,
-        })
-
-        // axios.post('https://cheerful-trunks-duck.cyclic.app/cart',{pro})
-        // .then((res) => {
-        //     console.log(res)
-        // })
-        // .catch((err) => {
-        //     console.log(err)
-        // })
-
-
-            // const newUserData = userData.filter(el => el.id == userId)
-            // console.log(newUserData[0].cart.push(newUserData));
-
+        if(fashiontoken){
+            dispatch(addCart(pro))
             
-            setClicked(true)
-            // dispatch(cartaction(userId,pro))
+            .then((res)=>{
+                console.log(res)
+                if(res.payload){
+                    toast({
+                        title: 'Product Added to Cart successfully',
+                        description: "",
+                        status: 'success',
+                        duration: 4000,
+                        isClosable: true,
+                    })
+                }
+                else{
+                    toast({
+                        title: 'Sorry you have to login first',
+                        description: "",
+                        status: 'error',
+                        duration: 4000,
+                        isClosable: true,
+                    })
+                    navigate("/login")
+                }
+            })
+        }
     }
-
-    
-
 
     return (
         <>
-            <Navbar2 />
+            <Navbar />
             <div className={styles.main}>
                 <div className={styles.images}>
                     <div>
@@ -106,15 +62,13 @@ console.log(pro)
                     <div>
                         <img src={pro?.images?.image4} alt="" />
                     </div>
-
                 </div>
                 <div className={styles.details}>
-                    <h3 >{pro.brand}</h3>
-                    <p>{pro.title}</p>
-                    <p>Rating:-{pro.rating} <span>Review:-{pro.count}</span> </p>
+                    <h3 >{pro?.brand?.brand}</h3>
+                    <p>{pro?.title?.title}</p>
+                    <p>Rating:-{pro?.rating?.rating} <span>Review:-{pro?.count?.count}</span> </p>
                     <div className={styles.divider}></div>
-                    <h3>₹{pro.price} <span className={styles.off_price}>{pro.off_price} </span><span className={styles.dis}> {pro.discount}% off</span></h3>
-
+                    <h3>₹{pro?.price?.price} <span className={styles.off_price}>{pro?.off_price?.off_price} </span><span className={styles.dis}> {pro?.discount?.discount}% off</span></h3>
                     <h5>Select Size</h5>
                     <div className={styles.buttons}>
                         <button>38</button>
@@ -123,12 +77,11 @@ console.log(pro)
                         <button>44</button>
                     </div>
                     <div className={styles.cartAdd}>
-                        <button onClick={handleCart} disabled ={clicked}>ADD TO BAG</button>
-                        <button className={styles.wish}>Wishlist</button>
+                        <button onClick={handleCart}>ADD TO BAG</button>
                     </div>
                     <div>
                         <p className={styles.discription}>
-                            {pro.description}
+                            {pro?.description?.description}
                         </p>
                     </div>
                     <div>
@@ -145,8 +98,6 @@ console.log(pro)
                         </p>
                     </div>
                 </div>
-
-
             </div>
         </>
     )

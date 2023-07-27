@@ -1,5 +1,5 @@
 import React from 'react'
-import { ADDCARTLOADING, ADDCARTLOADINGERROR, ADDCARTSUCCESS } from './actionType'
+import { ADDCARTLOADING, ADDCARTLOADINGERROR, ADDCARTSUCCESS, GETCARTLOADING, GETCARTLOADINGERROR, GETCARTSUCCESS } from './actionType'
 
 const init= {
     isloadin:false,
@@ -9,7 +9,7 @@ const init= {
 
 
 
-const cartreducer = (state=init,{type,payload}) => {
+export const cartreducer = (state=init,{type,payload}) => {
       switch (type){
          case ADDCARTLOADING:{
              return{
@@ -37,5 +37,40 @@ const cartreducer = (state=init,{type,payload}) => {
         return state
 }
 }
+const init2= {
+    isloadin:false,
+    iserror:false,
+    data:""
+}
 
-export default cartreducer
+
+
+export const getcartreducer = (state=init2,{type,payload}) => {
+    console.log(payload)
+      switch (type){
+         case GETCARTLOADING:{
+             return{
+                ...state,
+                isloadin:true,
+             }
+         }
+         case GETCARTLOADINGERROR:{
+            return{
+                ...state,
+                isloadin:false,
+                iserror:true,
+            }
+         }
+         case GETCARTSUCCESS:{
+            return{
+               ...state,
+               isloadin:false,
+               iserror:false,
+               data:payload
+      
+      }
+    }
+    default:
+        return state
+}
+}

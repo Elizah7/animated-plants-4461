@@ -2,8 +2,8 @@
 import Footer from './Footer';
 import Carousel from './Carousel';
 import Main from './Main';
-import Navbar2 from '../Components/Navbar2';
-
+// import Navbar2 from '../Components/Navbar2';
+import Navbar from "../Components/NewNavbar"
 
 
 function Home() {
@@ -12,7 +12,7 @@ function Home() {
 
   return (
     <>
-      <Navbar2 />
+      <Navbar/>
       <Carousel />
       <Main />
       <Footer />

@@ -61,7 +61,7 @@ function Footer(){
         <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
           <Stack align={'flex-start'}>
             <ListHeader>ONLINE SHOPPING</ListHeader>
-            <Link to={'/mens'}>Men</Link>
+            <Link to={'/men'}>Men</Link>
             <Link href={'#'}>Women</Link>
             <Link href={'#'}>Kids</Link>
             <Link href={'#'}>Home & Living</Link>

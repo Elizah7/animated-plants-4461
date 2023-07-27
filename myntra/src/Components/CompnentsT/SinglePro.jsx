@@ -1,26 +1,34 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
 import ProductDetail from '../../PagesT/ProductDetail';
+import { getSingleProduct } from '../../Redux/Products/actions';
+import Footer from '../../VPages/Footer';
+import { Box } from '@chakra-ui/react';
 
 const SinglePro = () => {
     const {id} = useParams();
-    const products = useSelector((store) => store.productDatareducer.products);
-    const [data,setData] = useState({});
+    const product = useSelector((store) => store.singleprodreducer.product);
 
+    const dispatch = useDispatch()
+    console.log(id,product && product)
     useEffect(() => {
-        let productData = products.find((el) => el.id === +id);
-        productData && setData(productData);
+        dispatch(getSingleProduct(id))
     },[]);
 
-    console.log(data)
-  return (
+
+  
+  return (<>
     <div>
         <h1>
-            <ProductDetail pro={data} />
+            <ProductDetail pro={product && product.Data && product.Data} />
         </h1>
     </div>
+      <Box>
+        <Footer/>
+    </Box>
+    </>
   )
 }
 
